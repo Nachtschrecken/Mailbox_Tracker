@@ -11,10 +11,10 @@ while wlan.isconnected() == False:
     sleep(1)
 
 def sendmail():
-    sender_email = 'kleierferris@gmail.com'
-    sender_name = 'Algalon Mailsystem'
+    sender_email = 'your email address'
+    sender_name = 'your name'
     sender_app_password = cred.GOOG
-    recipient_email ='ferris@uldagon.com'
+    recipient_email ='target address'
     email_subject ='You got Mail'
 
     smtp = umail.SMTP('smtp.gmail.com', 465, ssl=True)
@@ -25,7 +25,7 @@ def sendmail():
     
     current_time = utime.localtime()
     formatted_time = "{:02d}:{:02d}:{:02d}".format(current_time[3], current_time[4], current_time[5])
-    smtp.write("\nHello Ferris" + "\n\nYou got new mail at " + formatted_time + ".\nCheck your mailbox")
+    smtp.write("\nHello [YOUR NAME]" + "\n\nYou got new mail at " + formatted_time + ".\nCheck your mailbox")
     
     smtp.send()
     smtp.quit()
