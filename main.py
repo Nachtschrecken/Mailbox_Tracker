@@ -1,3 +1,9 @@
+# Automatically track if you got new mail using Raspberry Pi Pico W and MicroPython
+# Install IR sensor on your Pico and get started
+#
+# Copyright (c) Ferris Kleier 2023
+# License: MIT
+
 import cred
 import umail
 import network
@@ -11,11 +17,11 @@ while wlan.isconnected() == False:
     sleep(1)
 
 def sendmail():
-    sender_email = 'your email address'
-    sender_name = 'your name'
+    sender_email = cred.EMAIL
+    sender_name = 'TrackBox'
     sender_app_password = cred.GOOG
-    recipient_email ='target address'
-    email_subject ='You got Mail'
+    recipient_email = cred.EMAIL
+    email_subject = 'You got Mail'
 
     smtp = umail.SMTP('smtp.gmail.com', 465, ssl=True)
     smtp.login(sender_email, sender_app_password)
@@ -25,7 +31,7 @@ def sendmail():
     
     current_time = utime.localtime()
     formatted_time = "{:02d}:{:02d}:{:02d}".format(current_time[3], current_time[4], current_time[5])
-    smtp.write("\nHello [YOUR NAME]" + "\n\nYou got new mail at " + formatted_time + ".\nCheck your mailbox")
+    smtp.write("\nHello " + cred.NAME + "\n\nYou got new mail at " + formatted_time + ".\nCheck your mailbox")
     
     smtp.send()
     smtp.quit()
@@ -33,11 +39,9 @@ def sendmail():
 led = machine.Pin("LED", machine.Pin.OUT)
 pin = machine.Pin(28, machine.Pin.IN)
 
-if pin.value():
-    for x in range(15):
-        led.toggle()
-        sleep(0.01)
-        
-for x in range(16):
-    led.toggle()
-    sleep(0.2)
+while True:
+    if pin.value():
+        led.on()
+        sendmail()
+        sleep(20)
+        led.off()
